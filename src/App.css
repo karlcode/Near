@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  
+  position: relative;
   
 }
 
@@ -10,12 +10,20 @@
 }
 
 .App-header {
-  
+  position: relative;
+  top: 10vh;
+    margin: 0 auto;
   background-color: #ffdd00;
   height: 200px;
   width: 500px;
-  margin: 0 auto;
   color: black;
+  border: 2px solid black;
+  transition: all 0.3s ease-in-out;
+}
+.App-header:hover{
+  transition: all 0.2s ease-in-out;
+    transform: translate(10px, 10px);
+    box-shadow: -1px -1px 0px #999, -2px -2px 0px #999, -3px -3px 0px #999, -4px -4px 0px #999, -5px -5px 0px #999, -6px -6px 0px #999, -7px -7px 0px #999, -8px -8px 0px #999, -9px -9px 0px #999, -10px -10px 0px #999, -11px -11px 0px #999, -12px -12px 0px #999;
 }
 
 #mainInput{
