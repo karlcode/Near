@@ -1,21 +1,44 @@
 .App {
   text-align: center;
+  
+  
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
+  animation: App-logo-spin infinite 2s linear;
   height: 80px;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+  
+  background-color: #ffdd00;
+  height: 200px;
+  width: 500px;
+  margin: 0 auto;
+  color: black;
 }
 
-.App-intro {
-  font-size: large;
+#mainInput{
+      display: block;
+    margin: 0.3em 0 0 0;
+    padding: 0.5em 1em 0.5em 0.7em;
+    width: 100%;
+    border: 2px solid black;
+    background: white;
+    color: black;
+    font-size: 1em;
+       
+    line-height: 1;
+}
+#YOLO{
+      background-color: black; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 }
 
 @keyframes App-logo-spin {
