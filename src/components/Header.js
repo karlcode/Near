@@ -9,6 +9,7 @@ class Header extends Component {
       <header>
         
         <h1> THIS IS A HEADER. PUT YOUR HEADER SHIT HERE </h1>
+        <h1> THIS IS A HEADER. PUT YOUR HEADER SHIT HERE </h1>
       </header>
     );
   }
