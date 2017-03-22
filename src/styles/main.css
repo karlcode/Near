@@ -50,6 +50,9 @@
   to {
     transform: rotate(360deg); } }
 
+header {
+  background-color: blue; }
+
 body {
   margin: 0;
   padding: 0;
