@@ -1,8 +1,11 @@
 .bar {
+    top: 10vh;
     position: absolute;
-    height: 50px;
-    width: 50px;
-    background-color: red;
+    
+    width: 80%;
+    padding: 15px;
+    background-color: white;
     left : 50%;
      transform: translate(-50%);
+     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
