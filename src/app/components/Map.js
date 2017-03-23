@@ -41,6 +41,7 @@ class Map extends React.Component {
 
     render() {
         return (
+
             <div id="wrapper">
                 
                 <div id="map" ref="map">
@@ -49,6 +50,9 @@ class Map extends React.Component {
                 </div>
             
             </div>
+
+
+
         );
     }
 }
