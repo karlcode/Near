@@ -1,7 +1,7 @@
+@import 'base/base';
 @import 'base/typography';
 
+@import 'components/app';
+@import 'components/bar';
 @import 'components/map';
 
-body{
-    margin: 0 !important;
-}
