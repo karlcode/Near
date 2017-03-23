@@ -36,7 +36,29 @@ class Map extends React.Component {
             }
             ]
         });
+          this.loadData();
         
+    }
+
+    loadData(){
+        fetch('https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4&key=AIzaSyDo21X19_S1Py03fPlRKOHoiCPpbiOBkB8')  
+            .then(  
+                function(response) {  
+                if (response.status !== 200) {  
+                    console.log('Looks like there was a problem. Status Code: ' +  
+                    response.status);  
+                    return;  
+                }
+
+                // Examine the text in the response  
+                response.json().then(function(data) {  
+                    console.log(data);  
+                });  
+                }  
+            )  
+            .catch(function(err) {  
+                console.log('Fetch Error :-S', err);  
+            });
     }
 
     render() {
