@@ -3,5 +3,6 @@
     height: 50px;
     width: 50px;
     background-color: red;
-    left : calc(50% - 25px);
+    left : 50%;
+     transform: translate(-50%);
 }
