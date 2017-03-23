@@ -11,16 +11,21 @@ class Map extends React.Component {
 
     componentDidMount() {
         this.map = new google.maps.Map(this.refs.map, {
-            center: {lat: -34.397, lng: 150.644},
-            zoom: 8
+            center: {lat: -33.8688, lng: 151.209},
+            zoom: 13,
+            streetViewControl: false,
+            mapTypeControl: false
         });
     }
 
     render() {
         return (
             <div>
-                <h1>Hello World from Map</h1>
-                <div id="map" ref="map"></div>
+                
+                <div id="map" ref="map">
+                    <div><h1>Near: Find me a restaurant nearby</h1></div>
+                    
+                </div>
             </div>
         );
     }
