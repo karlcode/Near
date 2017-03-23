@@ -41,18 +41,7 @@ class Map extends React.Component {
 
     render() {
         return (
-
-            <div id="wrapper">
-                
-                <div id="map" ref="map">
-                   
-
-                </div>
-            
-            </div>
-
-
-
+            <div id="map" ref="map" />
         );
     }
 }
