@@ -6,7 +6,7 @@ var DIST_DIR = path.resolve(__dirname, "dist");
 var SRC_DIR = path.resolve(__dirname, "src");
 
 var config = {
-    entry: SRC_DIR + "/app/index.js",
+    entry: SRC_DIR + "/app/app.js",
     output: {
         path: DIST_DIR + "/app",
         filename: "bundle.js",
@@ -15,6 +15,7 @@ var config = {
     watch: true,
     module: {
         loaders: [
+            /*
 			{
 				test: /\.js$/, // include .js files
 				enforce: "pre", // preload the jshint loader
@@ -24,7 +25,7 @@ var config = {
 						loader: "jshint-loader"
 					}
 				]
-			},
+			},*/
             {
                 test: /\.js?/,
                 include: SRC_DIR,

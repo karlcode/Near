@@ -1,14 +1,21 @@
 import React from "react";
 import ReactDom from "react-dom";
+
+import Map from "./components/Map.js"
+
 require("./styles/main.scss");
 
 class App extends React.Component {
     render() {
         return (
-            <h1>Hello World</h1>
+            <div>
+                <Map />
+            </div>
         );
     }
 }
 
-const app = document.getElementById('app');
-ReactDom.render(<App/>, app)
+ReactDom.render(
+    <App/>,
+    document.getElementById('app')
+)
