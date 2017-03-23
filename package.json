@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build",
 
-    "build": "concurrently \"webpack -d\" \"webpack-dev-server\"",
+    "build": "concurrently \"webpack -d\" \"webpack-dev-server --open\"",
     "build:prod": "webpack -p"
   },
   "repository": {
