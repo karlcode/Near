@@ -1,5 +1,6 @@
 import React from "react";
 
+
 class Map extends React.Component {
     shouldComponentUpdate() {
         return false;
@@ -14,8 +15,28 @@ class Map extends React.Component {
             center: {lat: -33.8688, lng: 151.209},
             zoom: 13,
             streetViewControl: false,
-            mapTypeControl: false
+            mapTypeControl: false,
+            styles: [
+            {   featureType: "road",
+                elementType: "labels",
+                stylers: [{visibility: "off"}] 
+            },   
+            {
+                featureType: 'poi',
+                stylers: [{visibility: 'off'}]
+            },
+            {
+                featureType: 'poi.business',
+                stylers: [{visibility: 'off'}]
+            },
+            {
+                featureType: 'transit',
+                elementType: 'labels.icon',
+                stylers: [{visibility: 'off'}]
+            }
+            ]
         });
+        
     }
 
     render() {
@@ -24,9 +45,9 @@ class Map extends React.Component {
                 
                 <div id="map" ref="map">
                    
-                    
+
                 </div>
-                <div id="absolute"><h1>Near: Find something to eat nearby</h1></div>
+            
             </div>
         );
     }

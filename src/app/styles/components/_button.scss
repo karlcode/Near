@@ -1,0 +1,19 @@
+#button{
+     position: fixed;
+    bottom: 10vh;
+    left: 50%;
+   transform: translate(-50%);
+   
+   
+}
+
+#locationButton{
+    width: 75px;
+    height: 75px;
+    
+    border-radius: 50%;
+    background-color: springgreen;
+}
+#locationButton:focus{
+    outline: none;
+}
