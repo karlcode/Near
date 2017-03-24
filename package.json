@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build",
-
     "build": "concurrently \"webpack -d\" \"webpack-dev-server --open\"",
     "build:prod": "webpack -p"
   },
@@ -25,6 +24,7 @@
     "react-dom": "^15.4.2"
   },
   "devDependencies": {
+    "axios": "^0.15.3",
     "babel-loader": "^6.4.1",
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",

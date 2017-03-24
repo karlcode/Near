@@ -52,7 +52,10 @@ var config = {
     ],
     devServer: {
         contentBase: path.resolve(__dirname, "dist") +  "/app",
-        inline: true
+        inline: true,
+           headers: {
+        "Access-Control-Allow-Origin": "*",
+    }
     }
 };
 

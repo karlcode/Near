@@ -36,7 +36,22 @@ class Map extends React.Component {
             }
             ]
         });
-          this.loadData();
+       // this.map.panTo(new google.maps.LatLng(51.433373, -0.712251));
+        //this.loadData();
+        var request = {
+    location: {lat: -33.8688, lng: 151.209},
+    radius: '500',
+    types: ['store']
+
+
+  };
+        var service = new google.maps.places.PlacesService(this.map);
+        service.nearbySearch(request, function(results){console.log(results)});
+
+          var marker = new google.maps.Marker({
+          position: {lat: -33.8688, lng: 151.209},
+          map: this.map
+        });
         
     }
 
@@ -58,7 +73,7 @@ class Map extends React.Component {
             )  
             .catch(function(err) {  
                 console.log('Fetch Error :-S', err);  
-            });
+     });
     }
 
     render() {
@@ -67,5 +82,7 @@ class Map extends React.Component {
         );
     }
 }
+
+
 
 export default  Map;
