@@ -1,4 +1,6 @@
 import React from "react";
+import Select from 'react-select';
+
 
 class Bar extends React.Component {
     componentDidMount() {

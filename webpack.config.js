@@ -26,6 +26,7 @@ var config = {
 					}
 				]
 			},*/
+            { test: /\.css$/, loader: "style-loader!css-loader" },
             {
                 test: /\.js?/,
                 include: SRC_DIR,
