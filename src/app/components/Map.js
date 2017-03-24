@@ -41,7 +41,7 @@ class Map extends React.Component {
     }
 
     loadData(){
-        fetch('https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4&key=AIzaSyDo21X19_S1Py03fPlRKOHoiCPpbiOBkB8')  
+        fetch('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=restaurant&keyword=cruise&key=AIzaSyDo21X19_S1Py03fPlRKOHoiCPpbiOBkB8')  
             .then(  
                 function(response) {  
                 if (response.status !== 200) {  
