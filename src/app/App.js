@@ -20,15 +20,16 @@ class App extends React.Component {
     handleMapEvent(event) {
         this.setState({
             mapEvent: event
-        });
+        });        
     }
+
 
     render() {
         return (
             <div id="app">
-                <Bar />
+                <Bar handleMapEvent={this.handleMapEvent}/>
                 <Map mapEvent={this.state.mapEvent}/>
-                <Button mapEvent={'find'} handleMapEvent={this.handleMapEvent}/>
+                <Button id="button-find" text={'find'} mapEvent={'find'} handleMapEvent={this.handleMapEvent}/>
             </div>
         );
     }

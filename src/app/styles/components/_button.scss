@@ -1,19 +1,16 @@
-#button{
-    position: fixed;
+.button{
     bottom: 10vh;
     left: 50%;
     transform: translate(-50%);
-   
-   
-}
-
-#locationButton{
     width: 100px;
     height: 100px;
-    
     border-radius: 50%;
-    background-color: springgreen;
+
+    &:focus {
+        outline: none;
+    }
 }
-#locationButton:focus{
-    outline: none;
+
+#button-find {
+    background-color: springgreen;
 }

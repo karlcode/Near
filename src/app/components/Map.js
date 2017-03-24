@@ -1,21 +1,6 @@
 import React from "react";
 
-
 class Map extends React.Component {
-    shouldComponentUpdate() {
-        return false;
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.mapEvent) {
-            switch(nextProps.mapEvent) {
-                case 'find':
-                    alert('Put the find code here');
-                    break;
-            }
-        }
-    }
-
     componentDidMount() {
         this.map = new google.maps.Map(this.refs.map, {
             center: {lat: -33.8688, lng: 151.209},
@@ -23,25 +8,75 @@ class Map extends React.Component {
             streetViewControl: false,
             mapTypeControl: false,
             styles: [
-            {   featureType: "road",
-                elementType: "labels",
-                stylers: [{visibility: "off"}] 
-            },   
-            {
-                featureType: 'poi',
-                stylers: [{visibility: 'off'}]
-            },
-            {
-                featureType: 'poi.business',
-                stylers: [{visibility: 'off'}]
-            },
-            {
-                featureType: 'transit',
-                elementType: 'labels.icon',
-                stylers: [{visibility: 'off'}]
-            }
+                {   
+                    featureType: "road",
+                    elementType: "labels",
+                    stylers: [{visibility: "off"}] 
+                },   
+                {
+                    featureType: 'poi',
+                    stylers: [{visibility: 'off'}]
+                },
+                {
+                    featureType: 'poi.business',
+                    stylers: [{visibility: 'off'}]
+                },
+                {
+                    featureType: 'transit',
+                    elementType: 'labels.icon',
+                    stylers: [{visibility: 'off'}]
+                }
             ]
         });
+    }
+
+    // force component not to re-render, so map is loaded only once
+    shouldComponentUpdate() {return false;}
+
+    // fired when parent is updated
+    // please try be neat
+    componentWillReceiveProps(nextProps) {
+        var event = nextProps.mapEvent;
+
+        if (event.title) {
+            switch(event.title) {
+                case 'find':
+                    alert('Put the find code here');
+                    break;
+                case 'bootstrapAC' :
+                    this.bootstrapAC(event.data);
+                    break;
+            }
+        }
+    }
+
+    // bind input from component-Bar to map
+    bootstrapAC(input) {
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener('place_changed', () => {
+            var place = autocomplete.getPlace();
+            if (place.geometry) {
+                this.map.panTo(place.geometry.location);
+            }
+        });
+    }
+
+    render() {
+        return (
+            <div id="map" ref="map" />
+        );
+    }
+}
+
+
+
+export default  Map;
+
+
+
+
+  /** 
+
         var infowindow = new google.maps.InfoWindow();
         var service = new google.maps.places.PlacesService(this.map);
 
@@ -62,18 +97,4 @@ class Map extends React.Component {
             });
           }
           console.log(place.formatted_address)
-        });
-
-    }
-
-
-    render() {
-        return (
-            <div id="map" ref="map" />
-        );
-    }
-}
-
-
-
-export default  Map;
+        });*/
