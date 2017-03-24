@@ -36,30 +36,29 @@ class Map extends React.Component {
             }
             ]
         });
-          this.loadData();
-        
-    }
+         
+        var infowindow = new google.maps.InfoWindow();
+        var service = new google.maps.places.PlacesService(this.map);
 
-    loadData(){
-        fetch('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=restaurant&keyword=cruise&key=AIzaSyDo21X19_S1Py03fPlRKOHoiCPpbiOBkB8')  
-            .then(  
-                function(response) {  
-                if (response.status !== 200) {  
-                    console.log('Looks like there was a problem. Status Code: ' +  
-                    response.status);  
-                    return;  
-                }
-
-                // Examine the text in the response  
-                response.json().then(function(data) {  
-                    console.log(data);  
-                });  
-                }  
-            )  
-            .catch(function(err) {  
-                console.log('Fetch Error :-S', err);  
+        service.getDetails({
+          placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
+        }, function(place, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            var marker = new google.maps.Marker({
+              //map: map,
+              position: place.geometry.location
             });
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+                'Place ID: ' + place.place_id + '<br>' +
+                place.formatted_address + '</div>');
+              infowindow.open(map, this);   
+            });
+          }
+          console.log(place.formatted_address)
+        });
     }
+
 
     render() {
         return (
