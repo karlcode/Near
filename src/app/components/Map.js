@@ -7,10 +7,10 @@ class Map extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps) {
-            switch(nextProps) {
-                case nextProps:
-                    alert('Put the find code here')
+        if (nextProps.mapEvent) {
+            switch(nextProps.mapEvent) {
+                case 'find':
+                    alert('Put the find code here');
                     break;
             }
         }
