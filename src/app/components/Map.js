@@ -36,45 +36,31 @@ class Map extends React.Component {
             }
             ]
         });
-       // this.map.panTo(new google.maps.LatLng(51.433373, -0.712251));
-        //this.loadData();
-        var request = {
-    location: {lat: -33.8688, lng: 151.209},
-    radius: '500',
-    types: ['store']
-
-
-  };
+        var mapp = this.map;
+        var infowindow = new google.maps.InfoWindow();
         var service = new google.maps.places.PlacesService(this.map);
-        service.nearbySearch(request, function(results){console.log(results)});
 
-          var marker = new google.maps.Marker({
-          position: {lat: -33.8688, lng: 151.209},
-          map: this.map
+        service.getDetails({
+          placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
+        }, (place, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+         
+            var marker = new google.maps.Marker({
+              map: this.map,
+              position: place.geometry.location
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+                'Place ID: ' + place.place_id + '<br>' +
+                place.formatted_address + '</div>');
+              infowindow.open(map, this);   
+            });
+          }
+          console.log(place.formatted_address)
         });
-        
+
     }
 
-    loadData(){
-        fetch('https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4&key=AIzaSyDo21X19_S1Py03fPlRKOHoiCPpbiOBkB8')  
-            .then(  
-                function(response) {  
-                if (response.status !== 200) {  
-                    console.log('Looks like there was a problem. Status Code: ' +  
-                    response.status);  
-                    return;  
-                }
-
-                // Examine the text in the response  
-                response.json().then(function(data) {  
-                    console.log(data);  
-                });  
-                }  
-            )  
-            .catch(function(err) {  
-                console.log('Fetch Error :-S', err);  
-     });
-    }
 
     render() {
         return (
