@@ -7,7 +7,13 @@ class Map extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        //update map here
+        if (nextProps) {
+            switch(nextProps) {
+                case nextProps:
+                    alert('Put the find code here')
+                    break;
+            }
+        }
     }
 
     componentDidMount() {
@@ -36,7 +42,6 @@ class Map extends React.Component {
             }
             ]
         });
-        var mapp = this.map;
         var infowindow = new google.maps.InfoWindow();
         var service = new google.maps.places.PlacesService(this.map);
 
@@ -51,7 +56,7 @@ class Map extends React.Component {
             });
             google.maps.event.addListener(marker, 'click', function() {
               infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-                'Place ID: ' + place.place_id + '<br>' +
+                'Place ID: ' + vplace.place_id + '<br>' +
                 place.formatted_address + '</div>');
               infowindow.open(map, this);   
             });

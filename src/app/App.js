@@ -2,21 +2,33 @@ import React from "react";
 import ReactDom from "react-dom";
 
 import Button from "./components/Button.js"
-
-
 import Bar from "./components/Bar.js"
-
 import Map from "./components/Map.js"
 
 require("./styles/main.scss");
 
 class App extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            mapEvent: ''
+        };
+
+        this.handleMapEvent = this.handleMapEvent.bind(this);
+    }
+
+    handleMapEvent(event) {
+        this.setState({
+            mapEvent: event
+        });
+    }
+
     render() {
         return (
             <div id="app">
                 <Bar />
-                <Map />
-                <Button />
+                <Map mapEvent={this.state.mapEvent}/>
+                <Button mapEvent={'find'} handleMapEvent={this.handleMapEvent}/>
             </div>
         );
     }
