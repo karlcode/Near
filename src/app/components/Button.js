@@ -2,8 +2,14 @@ import React from "react";
 
 class Button extends React.Component {
     
+    
     handleClick() {
-        this.props.handleMapEvent({title: this.props.mapEvent});
+        
+        this.props.handleMapEvent({
+            title: this.props.mapEvent
+            
+            
+    });
     }
 
     render() {

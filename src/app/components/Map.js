@@ -13,15 +13,17 @@ class Map extends React.Component {
 
     // fired when parent is updated
     componentWillReceiveProps(nextProps) {
-        var event = nextProps.mapEvent;
-
-        if (event.title) {
-            switch(event.title) {
+       
+        var props = {event: nextProps.mapEvent,
+                    location: this.currentMarker};
+        
+        if (props.event.title) {
+            switch(props.event.title) {
                 case 'find':
-                    alert('Put the find code here');
+                    this.performSearch(props);
                     break;
                 case 'bootstrapAC' :
-                    this.bootstrapAC(event.data);
+                    this.bootstrapAC(props.event.data);
                     break;
             }
         }
@@ -29,6 +31,7 @@ class Map extends React.Component {
 
     // bind input from component-Bar to map
     bootstrapAC(input) {
+        
         var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.addListener('place_changed', () => {
             var place = autocomplete.getPlace();
@@ -41,6 +44,28 @@ class Map extends React.Component {
 
         });
     }
+    performSearch(input) {
+        console.log(input.location.getPosition().lat(),input.location.getPosition().lng())
+        var request = {
+         bounds: new google.maps.LatLngBounds(
+       new google.maps.LatLng(-33.8688, 151.209), //random numbers --> cant figure out how to do bounds in a radius
+       new google.maps.LatLng(-31.8688, 152.209)),
+          keyword: 'park',
+          types: ['park']
+        };
+        var select = new google.maps.places.PlacesService(this.map)
+        select.radarSearch(request, this.callback);
+        ;
+      }
+    callback(results, status) {
+        if (status != google.maps.places.PlacesServiceStatus.OK) {
+          alert(status);
+          return;
+        }
+        for (var i = 0, result; result = results[i]; i++) {
+          addMarker(result);
+        }
+      }
 
 
     render() {
