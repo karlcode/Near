@@ -1,5 +1,5 @@
 import React from "react";
-import Select from 'react-select';
+//import Select from 'react-select';
 
 
 class Bar extends React.Component {
@@ -14,8 +14,13 @@ class Bar extends React.Component {
     render() {
         return (
             <div className="bar overlay">
-                <h1>Find restaurants nearby</h1>
-                <input ref="ac" style={{"width": "100%"}}></input>
+                <form>
+                <h1>Find <select>
+                    <option value="" disabled selected hidden>restaurants</option>
+                    <option value="1">things to do</option>
+                    <option value="2">brothels</option>
+                </select> <input id="nearbyId" ref="ac" placeholder="nearby"/></h1>
+                </form>
             </div>
         );
     }

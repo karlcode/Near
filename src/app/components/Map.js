@@ -19,7 +19,7 @@ class Map extends React.Component {
                 },
                 {
                     featureType: 'poi.business',
-                    stylers: [{visibility: 'off'}]
+                    stylers: [{visibility: 'on'}]
                 },
                 {
                     featureType: 'transit',
