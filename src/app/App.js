@@ -2,7 +2,7 @@ import React from "react";
 import ReactDom from "react-dom";
 
 import Button from "./components/Button.js"
-import Bar from "./components/Bar.js"
+import Widget from "./components/Widget.js"
 import Map from "./components/Map.js"
 
 require("./styles/main.scss");
@@ -26,7 +26,7 @@ class App extends React.Component {
     render() {
         return (
             <div id="app">
-                <Bar handleMapEvent={this.handleMapEvent}/>
+                <Widget handleMapEvent={this.handleMapEvent}/>
                 <Map mapEvent={this.state.mapEvent}/>
                 <Button id="button-find" text={'find'} mapEvent={'find'} handleMapEvent={this.handleMapEvent}/>
             </div>

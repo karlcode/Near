@@ -1,3 +1,74 @@
+.widget {
+    left: 15px;
+    top: 15px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+    border-radius: 3px;
+    padding: 15px;
+
+    h1 {
+        font-size: 22px;
+        margin: 0;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .widget-category {
+        cursor: pointer;
+        display: inline-block;
+
+        .widget-button {
+            margin: 0px 8px;
+            padding: 3px;
+
+            i {
+                color: #777;
+                font-size: 30px;
+                padding: 3px;
+                width: 30px;
+                text-align: center;
+            }
+        }
+
+        p {
+            color: #777;
+            font-size: 13px;
+            text-align: center;
+            margin: 0;
+            margin-top: 5px;
+            letter-spacing: 0.8px;
+        }
+    }
+
+    .widget-category:hover {
+        i, p {color: $active-light;}
+        p {font-weight: bold;}
+    }
+
+    .widget-category.active {
+        i, p {color: $active;}
+        p {font-weight: bold;}
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .bar {
     top: 10vh;
     position: absolute;
