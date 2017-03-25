@@ -57,7 +57,7 @@ export default  Map;
 function createMap(element, location) {
     return (new google.maps.Map(element, {
         center: location,
-        zoom: 13,
+        zoom: 15,
         streetViewControl: false,
         mapTypeControl: false,
         styles: [
