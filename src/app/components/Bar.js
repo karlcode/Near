@@ -19,7 +19,7 @@ class Bar extends React.Component {
                     <option value="" disabled selected hidden>restaurants</option>
                     <option value="1">things to do</option>
                     <option value="2">brothels</option>
-                </select> <input id="nearbyId" ref="ac" placeholder="nearby"/></h1>
+                </select><input id="nearbyId" ref="ac" placeholder="nearby"/></h1>
                 </form>
             </div>
         );
