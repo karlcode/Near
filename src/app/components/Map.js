@@ -5,6 +5,7 @@ const defaultLoc = {lat: -33.8688, lng: 151.209};
 class Map extends React.Component {
     componentDidMount() {
         this.map = createMap(this.refs.map, defaultLoc);
+        this.placesService = new google.maps.places.PlacesService(this.map);
         this.currentMarker= addMarker(this.map, defaultLoc, true, '')
     }
 
@@ -15,13 +16,16 @@ class Map extends React.Component {
     componentWillReceiveProps(nextProps) {
         var event = nextProps.mapEvent;
 
-        if (event.title) {
+        if (event) {
             switch(event.title) {
                 case 'find':
-                    alert('Put the find code here');
+                    this.nearbySearch();
                     break;
                 case 'bootstrapAC' :
-                    this.bootstrapAC(event.data);
+                    this.bootstrapAC(props.event.data);
+                    break;
+                case 'categoryUpdate':
+                    this.categories = event.data;
                     break;
             }
         }
@@ -42,6 +46,50 @@ class Map extends React.Component {
         });
     }
 
+    nearbySearch() {
+        var searchOptions = {
+            location: this.currentMarker.position,
+            radius: 500,
+            keyword: 'food'
+        }
+        this.placesService.nearbySearch(searchOptions, (results, status) => {
+            console.log(results);
+            for (var i = 0; i < results.length; i++) {
+                addMarker(this.map, results[i].geometry.location, false, results[i].name)
+            }
+        });
+    }
+
+    performSearch(input) {
+
+        var request = {
+         bounds: new google.maps.LatLngBounds(
+       new google.maps.LatLng(-33.8688, 151.209), //random numbers --> cant figure out how to do bounds in a radius
+       new google.maps.LatLng(-31.8688, 152.209)),
+          keyword: 'park',
+          types: ['park']
+        };
+        var select = new google.maps.places.PlacesService(this.map);;
+        select.radarSearch(request, this.callback.bind(this));
+
+      }
+
+    callback(results, status) {
+        if (status != google.maps.places.PlacesServiceStatus.OK) {
+          alert(status);
+          return;
+        }
+
+        console.log(this.map);
+ 
+
+        for (var i = 0, result; result = results[i]; i++) {
+             var location = result.geometry.location;
+            this.currentMarker = addMarker(this.map, location, true, '');
+            this.map.panTo(location);
+        }
+      }
+
 
     render() {
         return (
@@ -52,8 +100,12 @@ class Map extends React.Component {
 
 export default  Map;
 
-
 /* MAP UTILS */
+const foodTypes = 'bakery cafe meal_delivery meal_takeaway restaurant';
+const drinksTypes = 'night_club';
+const shopsTypes = 'book_store clothing_store convenience_store department_store furniture_store jewelry_store shoe_store shopping_mall';
+const funTypes = 'amusement_park aquarium art_gallery bowling_alley campground casino movie_theater spa stadium zoo';
+
 function createMap(element, location) {
     return (new google.maps.Map(element, {
         center: location,

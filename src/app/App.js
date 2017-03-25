@@ -15,6 +15,7 @@ class App extends React.Component {
         };
 
         this.handleMapEvent = this.handleMapEvent.bind(this);
+        
     }
 
     handleMapEvent(event) {
