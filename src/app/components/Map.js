@@ -3,11 +3,13 @@ import React from "react";
 const defaultLoc = {lat: -33.8688, lng: 151.209};
 var markers = [];
 
+var image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/367018-200.png';
+
 class Map extends React.Component {
     componentDidMount() {
         this.map = createMap(this.refs.map, defaultLoc);
         this.placesService = new google.maps.places.PlacesService(this.map);
-        this.currentMarker= addMarker(this.map, defaultLoc, true, '')
+        this.currentMarker= addMarker(this.map, defaultLoc, true, '', image)
     }
 
     // force component not to re-render, so map is loaded only once
@@ -145,12 +147,13 @@ function createMap(element, location) {
 }
 
 
-function addMarker(map, position, draggable, title) {
+function addMarker(map, position, draggable, title, icon) {
     var marker = new google.maps.Marker({
         position: position,
         map: map,
         draggable: draggable,
-        title: title
+        title: title,
+        icon: icon,
     })
     markers.push(marker);
     return(marker);
