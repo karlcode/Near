@@ -1,6 +1,7 @@
 import React from "react";
 
 const defaultLoc = {lat: -33.8688, lng: 151.209};
+var markers = [];
 
 class Map extends React.Component {
     componentDidMount() {
@@ -20,9 +21,11 @@ class Map extends React.Component {
             switch(event.title) {
                 case 'find':
                     this.nearbySearch();
+                    removeMarkers()
+                    console.log(markers)
                     break;
                 case 'bootstrapAC' :
-                    this.bootstrapAC(props.event.data);
+                    this.bootstrapAC(event.data);
                     break;
                 case 'categoryUpdate':
                     this.categories = event.data;
@@ -52,20 +55,26 @@ class Map extends React.Component {
             radius: 500,
             keyword: 'food'
         }
+        
         this.placesService.nearbySearch(searchOptions, (results, status) => {
-            console.log(results);
-            for (var i = 0; i < results.length; i++) {
+            for (var i = 0; i < results.length; i++) {            
                 addMarker(this.map, results[i].geometry.location, false, results[i].name)
+               
+                
+               
+                
             }
+         
+            
+            
+          
         });
     }
 
     performSearch(input) {
 
         var request = {
-         bounds: new google.maps.LatLngBounds(
-       new google.maps.LatLng(-33.8688, 151.209), //random numbers --> cant figure out how to do bounds in a radius
-       new google.maps.LatLng(-31.8688, 152.209)),
+        
           keyword: 'park',
           types: ['park']
         };
@@ -137,16 +146,35 @@ function createMap(element, location) {
 
 
 function addMarker(map, position, draggable, title) {
-    return(new google.maps.Marker({
+    var marker = new google.maps.Marker({
         position: position,
         map: map,
         draggable: draggable,
         title: title
-    }));
+    })
+    markers.push(marker);
+    return(marker);
+    
+  
 }
 
 function removeMarker (marker) {
     marker.setMap(null);
+    
+}
+function clearMarkers() {
+    if(markers.length > 1){
+        for (var i = 0; i < markers.length; i++) {       
+          markers[i].setMap(null);
+        }
+      }
+}
+function removeMarkers(){
+  clearMarkers();
+    markers = [];
+        
+    
+    
 }
 
 
