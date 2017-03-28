@@ -2,14 +2,15 @@ import React from "react";
 
 const defaultLoc = {lat: -33.8688, lng: 151.209};
 var markers = [];
-
+var bounds = new google.maps.LatLngBounds();
 var image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/367018-200.png';
 
 class Map extends React.Component {
     componentDidMount() {
         this.map = createMap(this.refs.map, defaultLoc);
         this.placesService = new google.maps.places.PlacesService(this.map);
-        this.currentMarker= addMarker(this.map, defaultLoc, true, '', image)
+        this.currentMarker= addMarker(this.map, defaultLoc, true, '', image);
+        
     }
 
     // force component not to re-render, so map is loaded only once
@@ -24,7 +25,7 @@ class Map extends React.Component {
                 case 'find':
                     this.nearbySearch();
                     removeMarkers()
-                    console.log(markers)
+                    
                     break;
                 case 'bootstrapAC' :
                     this.bootstrapAC(event.data);
@@ -55,7 +56,7 @@ class Map extends React.Component {
         var searchOptions = {
             location: this.currentMarker.position,
             radius: 500,
-            keyword: 'food'
+            keyword: 'restaurants'
         }
         
         this.placesService.nearbySearch(searchOptions, (results, status) => {
@@ -155,8 +156,17 @@ function addMarker(map, position, draggable, title, icon) {
         title: title,
         icon: icon,
     })
+    for (var i = 0; i < markers.length; i++) {
+        var geoCode = new google.maps.LatLng(markers[i].getPosition().lat(), markers[i].getPosition().lng());
+        bounds.extend(geoCode);
+    }
+    if(markers.length > 1){
+        map.fitBounds(bounds)}
+    
     markers.push(marker);
     return(marker);
+    
+
     
   
 }
@@ -175,6 +185,7 @@ function clearMarkers() {
 function removeMarkers(){
   clearMarkers();
     markers = [];
+    bounds = new google.maps.LatLngBounds(null);
         
     
     

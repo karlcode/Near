@@ -45,7 +45,13 @@ class Widget extends React.Component {
 
     render() {
         return (
-            <div className="widget overlay" >
+            <div className="bar overlay" >
+                <form >
+                <h1>Suggest me some restaurants <input id="nearbyId" ref="ac" placeholder="nearby"/>
+                </h1>
+                </form>
+            </div> 
+            /*<div className="widget overlay" >
                 <h1>find me nearby</h1>
                 <div className={"widget-category " + this.isCategoryActive(this.state.categories.food)} onClick={() => this.toggleCategoryState('food')}>
                     <div className="widget-button">
@@ -71,16 +77,11 @@ class Widget extends React.Component {
                     </div>
                     <p>fun</p>
                 </div>
-            </div>
+            </div>*/
         );
     }
 }
 
 export default Widget;
 
-/**       <div className="bar overlay" >
-                <form >
-                <h1>Suggest me some ... <input id="nearbyId" ref="ac" placeholder="nearby"/>
-                </h1>
-                </form>
-            </div> */
+      
