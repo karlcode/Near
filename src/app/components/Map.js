@@ -9,7 +9,8 @@ class Map extends React.Component {
     constructor() {
         super();
         this.state = {
-            status: 'Loading Map'
+            status: 'Loading Map',
+            loading: true
         };
     }
 
@@ -17,17 +18,17 @@ class Map extends React.Component {
         this.map = createMap(this.refs.map, defaultLoc);
         this.placesService = new google.maps.places.PlacesService(this.map);
         this.currentMarker = addMarker(this.map, defaultLoc, true, '');
-        markers = [];
+        markers.pop(this.currentMarker);
+        
 
-        this.updateStatus('Requesting Location')
+        this.updateStatus('Requesting Location', true)
         getLocation(this.map, function(location) {
-            if (location) {
-                removeMarker(this.currentMarker);
-                this.currentMarker = addMarker(this.map, location, true, '');
-                this.map.panTo(this.currentMarker.position);
-                this.updateStatus('Location set. Search for things nearby!')
+            if (location) {;
+                this.currentMarker.setPosition(location);
+                this.map.panTo(location);
+                this.updateStatus('Location set. Search for things nearby!', false);
             } else {
-                this.updateStatus('Unable to set Location. Manually set.')
+                this.updateStatus('Unable to set Location. Manually set.', false);
         }}.bind(this));
 
         
@@ -43,32 +44,75 @@ class Map extends React.Component {
         if (event) {
             switch(event.title) {
                 case 'search':
-                    this.search();
+                    this.search(event.data);
                     break;
                 case 'bootstrap' :
                     this.searchOptions = event.data.searchOptions;
                     this.bootstrapAC(event.data.ac);
                     break;
                 case 'searchUpdate':
-                    this.searchOptions = event.data;
+                    this.searchUpdate(event.data);
                     break;
             }
         }
     }
 
-    search() {
+    fitMarkers() {
+        var bounds = new google.maps.LatLngBounds();
+        bounds.extend(this.currentMarker.getPosition());
+        for (var i = 0; i < markers.length; i++) {
+            bounds.extend(markers[i].getPosition());
+        }
+
+        google.maps.event.addListenerOnce(this.map, 'bounds_changed', () => {
+            console.log(this.map.getZoom());
+            this.map.setZoom(this.map.getZoom()-1);
+        });
+
+        this.map.fitBounds(bounds);
+        this.map.setCenter(bounds.getCenter());
+    }
+
+
+    searchUpdate(searchOptions) { 
+        this.searchOptions = searchOptions;
+
+        var categories = [];
+        if (searchOptions.categories.food) {
+            categories.push('food');
+        }
+        if (searchOptions.categories.drinks) {
+            categories.push('drinks');
+        }
+        if (searchOptions.categories.shops) {
+            categories.push('shops')
+        }
+
+        var status = "Finding: " + categories.join(', ') +
+        "  Within: " + round((searchOptions.range / 1000), 1) + "km";
+        this.updateStatus(status, false)
+    }
+
+    search(searchButton) {
         var category = this.getRandomCategory();
         var distance = this.searchOptions.range;
 
+        this.updateStatus('Searching for a place nearby.', true)
         this.placesService.radarSearch({
             type: category,
             radius: distance,
             location: this.currentMarker.position
-        }, (results) => {
-            var randomPlace = results[Math.floor(Math.random() * results.length)];
-            clearMarkers();
-            console.log(randomPlace);
-            addMarker(this.map, randomPlace.geometry.location, false, '');
+        }, (results, status) => {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                var randomPlace = results[Math.floor(Math.random() * results.length)];
+                clearMarkers();
+                addMarker(this.map, randomPlace.geometry.location, false, '');
+                this.fitMarkers();
+                this.updateStatus('Place found!', false)
+            } else {
+                this.updateStatus('Unable to find place that matches criteria.', false)
+            }
+            searchButton.className = "";
         });
     }
 
@@ -104,16 +148,18 @@ class Map extends React.Component {
             var place = autocomplete.getPlace();
             if (place.geometry) {
                 var location = place.geometry.location;
-                removeMarker(this.currentMarker);
-                this.currentMarker = addMarker(this.map, location, true, '');
+                this.currentMarker.setPosition(location);
                 this.map.panTo(location);
             }
+            this.updateStatus('Location set to: ' + input.value, false)
+            input.value = "";
         });
     }
 
-    updateStatus(status) {
+    updateStatus(status, loading) {
         this.setState({
-            status: status
+            status: status,
+            loading: loading
         });
         this.forceUpdate();
     }
@@ -122,7 +168,7 @@ class Map extends React.Component {
         return (
             <div id="map-wrapper">
                 <div id="map" ref="map" />
-                <StatusBar status={this.state.status}/>
+                <StatusBar status={this.state.status} loading={this.state.loading}/>
             </div>
         );
     }
@@ -177,7 +223,7 @@ function getLocation(map, callback) {
             lng: position.coords.longitude
         };
         callback(location);
-    }, function() {callback(location)});
+    }, function() {callback(location)}, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
     } else {
         callback(location)
     }
@@ -204,4 +250,10 @@ function clearMarkers() {
     for (var i = 0; i < markers.length; i++) {       
         markers[i].setMap(null);
     }
+    markers = [];
+}
+
+function round(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
 }

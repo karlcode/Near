@@ -42,7 +42,13 @@ class Widget extends React.Component {
     }
 
     search() {
-        this.sendMapEvent('search');
+        var searchButton = this.refs.searchButton;
+        if (searchButton) {
+            if (!searchButton.className) {
+                searchButton.className = 'widget-search-busy'
+                this.sendMapEvent('search', this.refs.searchButton);
+            }
+        }
     }
 
 
@@ -97,7 +103,7 @@ class Widget extends React.Component {
                 <h2>Current Location</h2>
                 <input id="widget-change-location" ref="ac" placeholder="Change Location"/>
                 <div id="widget-search">
-                    <h1 onClick={() => this.search()}>Search!</h1>
+                    <h1 onClick={() => this.search()} ref="searchButton">Search!</h1>
                 </div>
                 {/*
                 <div className={"widget-category "  + this.isCategoryActive(this.state.categories.fun)} onClick={() => this.toggleCategoryState('fun')}>

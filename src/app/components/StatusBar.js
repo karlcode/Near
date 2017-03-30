@@ -12,7 +12,12 @@ class StatusBar extends React.Component {
     render() {
         return (
             <div id="">
-                <p id="status">{this.props.status}</p> 
+                <p id="status">
+                    {this.props.status} 
+                    {this.props.loading &&
+                        <img src={require("./images/loading.gif")} />
+                    }
+                </p> 
             </div>
         );
     }

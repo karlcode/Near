@@ -26,7 +26,7 @@ class App extends React.Component {
     render() {
         return (
             <div id="app">
-                <Widget handleMapEvent={this.handleMapEvent}/>
+                <Widget handleMapEvent={this.handleMapEvent} />
                 <Map mapEvent={this.state.mapEvent}/>
                 {/*<Button id="button-find" text={'find'} mapEvent={'find'} handleMapEvent={this.handleMapEvent}/>*/}
             </div>

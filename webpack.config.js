@@ -42,6 +42,10 @@ var config = {
                     fallbackLoader: 'style-loader',
                     loader: 'css-loader!sass-loader'
                 })
+            },
+            {
+                test:/\.gif$/,
+                use: 'file-loader'
             }
         ]
     },
