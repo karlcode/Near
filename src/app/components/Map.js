@@ -1,15 +1,35 @@
 import React from "react";
+import StatusBar from "./StatusBar.js"
 
 const defaultLoc = {lat: -33.8688, lng: 151.209};
 var markers = [];
 var bounds = new google.maps.LatLngBounds();
-var image = 'https://d30y9cdsu7xlg0.cloudfront.net/png/367018-200.png';
 
 class Map extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            status: 'Loading Map'
+        };
+    }
+
     componentDidMount() {
         this.map = createMap(this.refs.map, defaultLoc);
         this.placesService = new google.maps.places.PlacesService(this.map);
-        this.currentMarker= addMarker(this.map, defaultLoc, true, '', image);
+        this.currentMarker = addMarker(this.map, defaultLoc, true, '');
+        markers = [];
+
+        this.updateStatus('Requesting Location')
+        getLocation(this.map, function(location) {
+            if (location) {
+                removeMarker(this.currentMarker);
+                this.currentMarker = addMarker(this.map, location, true, '');
+                this.map.panTo(this.currentMarker.position);
+                this.updateStatus('Location set. Search for things nearby!')
+            } else {
+                this.updateStatus('Unable to set Location. Manually set.')
+        }}.bind(this));
+
         
     }
 
@@ -22,22 +42,62 @@ class Map extends React.Component {
 
         if (event) {
             switch(event.title) {
-                case 'find':
-                    this.nearbySearch();
-                    removeMarkers()
-                    
+                case 'search':
+                    this.search();
                     break;
-                case 'bootstrapAC' :
-                    this.bootstrapAC(event.data);
+                case 'bootstrap' :
+                    this.searchOptions = event.data.searchOptions;
+                    this.bootstrapAC(event.data.ac);
                     break;
-                case 'categoryUpdate':
-                    this.categories = event.data;
+                case 'searchUpdate':
+                    this.searchOptions = event.data;
                     break;
             }
         }
     }
 
-    // bind input from component-Bar to map
+    search() {
+        var category = this.getRandomCategory();
+        var distance = this.searchOptions.range;
+
+        this.placesService.radarSearch({
+            type: category,
+            radius: distance,
+            location: this.currentMarker.position
+        }, (results) => {
+            var randomPlace = results[Math.floor(Math.random() * results.length)];
+            clearMarkers();
+            console.log(randomPlace);
+            addMarker(this.map, randomPlace.geometry.location, false, '');
+        });
+    }
+
+    getRandomCategory() {
+        var possibleCategories = [];
+        var categories = this.searchOptions.categories;
+
+        if (categories.food) {
+            possibleCategories.push('restaurant');
+        }
+        if (categories.drinks) {
+            possibleCategories.push('bar');
+        }
+        if (categories.shops) {
+            possibleCategories.push('shopping_mall')
+        }
+
+        // if user chose 0 categories, choose from all
+        if (possibleCategories.length == 0) {
+            possibleCategories.push('restaurant');
+            possibleCategories.push('bar');
+            possibleCategories.push('shopping_mall');
+        }
+
+        return possibleCategories[Math.floor(Math.random() * possibleCategories.length)];
+    }
+
+
+    // bind input from widget to map
     bootstrapAC(input) {
         var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.addListener('place_changed', () => {
@@ -48,69 +108,28 @@ class Map extends React.Component {
                 this.currentMarker = addMarker(this.map, location, true, '');
                 this.map.panTo(location);
             }
-
         });
     }
 
-    nearbySearch() {
-        var searchOptions = {
-            location: this.currentMarker.position,
-            radius: 500,
-            keyword: 'restaurants'
-        }
-        
-        this.placesService.nearbySearch(searchOptions, (results, status) => {
-            for (var i = 0; i < results.length; i++) {            
-                addMarker(this.map, results[i].geometry.location, false, results[i].name)
-               
-                
-               
-                
-            }
-         
-            
-            
-          
+    updateStatus(status) {
+        this.setState({
+            status: status
         });
+        this.forceUpdate();
     }
-
-    performSearch(input) {
-
-        var request = {
-        
-          keyword: 'park',
-          types: ['park']
-        };
-        var select = new google.maps.places.PlacesService(this.map);;
-        select.radarSearch(request, this.callback.bind(this));
-
-      }
-
-    callback(results, status) {
-        if (status != google.maps.places.PlacesServiceStatus.OK) {
-          alert(status);
-          return;
-        }
-
-        console.log(this.map);
- 
-
-        for (var i = 0, result; result = results[i]; i++) {
-             var location = result.geometry.location;
-            this.currentMarker = addMarker(this.map, location, true, '');
-            this.map.panTo(location);
-        }
-      }
-
 
     render() {
         return (
-            <div id="map" ref="map" />
+            <div id="map-wrapper">
+                <div id="map" ref="map" />
+                <StatusBar status={this.state.status}/>
+            </div>
         );
     }
 }
 
 export default  Map;
+
 
 /* MAP UTILS */
 const foodTypes = 'bakery cafe meal_delivery meal_takeaway restaurant';
@@ -119,7 +138,7 @@ const shopsTypes = 'book_store clothing_store convenience_store department_store
 const funTypes = 'amusement_park aquarium art_gallery bowling_alley campground casino movie_theater spa stadium zoo';
 
 function createMap(element, location) {
-    return (new google.maps.Map(element, {
+    var map = new google.maps.Map(element, {
         center: location,
         zoom: 15,
         streetViewControl: false,
@@ -144,7 +163,24 @@ function createMap(element, location) {
                 stylers: [{visibility: 'off'}]
             }
         ]
-    }));
+    });
+    return map;
+}
+
+function getLocation(map, callback) {
+    var location = '';
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+        location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+        callback(location);
+    }, function() {callback(location)});
+    } else {
+        callback(location)
+    }
 }
 
 
@@ -156,64 +192,16 @@ function addMarker(map, position, draggable, title, icon) {
         title: title,
         icon: icon,
     })
-    for (var i = 0; i < markers.length; i++) {
-        var geoCode = new google.maps.LatLng(markers[i].getPosition().lat(), markers[i].getPosition().lng());
-        bounds.extend(geoCode);
-    }
-    if(markers.length > 1){
-        map.fitBounds(bounds)}
-    
     markers.push(marker);
     return(marker);
-    
-
-    
-  
 }
 
 function removeMarker (marker) {
     marker.setMap(null);
-    
 }
+
 function clearMarkers() {
-    if(markers.length > 1){
-        for (var i = 0; i < markers.length; i++) {       
-          markers[i].setMap(null);
-        }
-      }
+    for (var i = 0; i < markers.length; i++) {       
+        markers[i].setMap(null);
+    }
 }
-function removeMarkers(){
-  clearMarkers();
-    markers = [];
-    bounds = new google.maps.LatLngBounds(null);
-        
-    
-    
-}
-
-
-
-
-  /** 
-
-        var infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(this.map);
-
-        service.getDetails({
-          placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
-        }, (place, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-         
-            var marker = new google.maps.Marker({
-              map: this.map,
-              position: place.geometry.location
-            });
-            google.maps.event.addListener(marker, 'click', function() {
-              infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-                'Place ID: ' + vplace.place_id + '<br>' +
-                place.formatted_address + '</div>');
-              infowindow.open(map, this);   
-            });
-          }
-          console.log(place.formatted_address)
-        });*/

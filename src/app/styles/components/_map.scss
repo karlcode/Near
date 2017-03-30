@@ -1,11 +1,11 @@
 #map {
-    height: 100vh;
-
-    width: calc(100vw);
+    flex: 1;
+    width: 100%;
 }
 
-#wrapper{
-    position: relative;
-    width: 100%;
+#map-wrapper{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 

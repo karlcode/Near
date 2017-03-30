@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDom from "react-dom";
 
-import Button from "./components/Button.js"
 import Widget from "./components/Widget.js"
 import Map from "./components/Map.js"
 
@@ -29,7 +28,7 @@ class App extends React.Component {
             <div id="app">
                 <Widget handleMapEvent={this.handleMapEvent}/>
                 <Map mapEvent={this.state.mapEvent}/>
-                <Button id="button-find" text={'find'} mapEvent={'find'} handleMapEvent={this.handleMapEvent}/>
+                {/*<Button id="button-find" text={'find'} mapEvent={'find'} handleMapEvent={this.handleMapEvent}/>*/}
             </div>
         );
     }
