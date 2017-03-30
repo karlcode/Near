@@ -4,7 +4,8 @@ import StatusBar from "./StatusBar.js"
 const defaultLoc = {lat: -33.8688, lng: 151.209};
 var markers = [];
 var bounds = new google.maps.LatLngBounds();
-
+var positionIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAADuElEQVRoQ+2YXW4SURTHz7lQE4aYdAPadgXSFRRSXwwY6wpKBV98oiuwrkCefJFaugIxQnyRACvouIK2uoEmhiExM/eYS4vODHNnzgyQZhL6WO7ce37n697zR0j5H6bcflgD6CK48+E3uX+7fPNwJc5ayabK8DUAsziXFoHqt8l2xoE9QDpAgs3+T6fotmH/cWZICDdA2HEyMGo/y10xbQxdtjBArTs5RJQNACy4T+pfO56D97cyPkPIJBLN00rufBGQxAD1r5MiCTpDgO0gA6IBZl+RCVIct57nhklAEgHUeuMzBKyGHcgHuN2FgNqn5fxRXIhYANUBbWbHk8+A4Mlv16EjIOgAodn/ZQ88NfAoWwKkAgFVEfFJoKEEQzufe9ku4Q0XhA0wNd6yBv5cn3qP6NzJiBN3YYa10duClyeIeDhvKJm2YZS4EGyAetca+D1PRD8EblQ/lh+YfkM498Dr3p+CBLuDAFue7wmGrYpR4kSBBaDJ+ZFt5A64ntIZcxvZSQcA9txruDURCaC6DQjy5DMAjFplQ1cHHMfNran3LNWFPBAgsRTVnSIBaj3r0t0qVdo4eaO4qOf9BCoSGWtietOJzFY5vxvmkVCAV71JVQCduTdAyO4G5Xwit/s+UjVBYF+4/y0Bjz6Vc23d/qEA9d74wt11VLc5reRD+/+iILXuuO3tTuFR0AKoVpeVdOk2yBa4s6w3jLaoY56rBQhIn6UXrg6i1h2b7ssuLI20APWepVrbi3+HEBy3KkZz0RThfF/vWg1AeO9a+6VVNg6Cvg0D8LY1RkvjGMdZE9C6tdH3APhvT91hqxoPk5y/BuCkBHfNOgJuT829TdJQxD6AdLfR+7zI/E+YRBdZ6p8SKp38V/p9PObU8/20kvdINt7XcUiPS/1zOjAKAFeOkdtd0UBz4R+ewryv7IucyAJHyhhDN/cS8xfu9DtG644EuIuCb8iYKlGxNZwgGJ3WxK03FoA6OHDoBjIRNo4WlFU+B8iT7NmDDTAdusfWMEhVUxKII8S7WMKWlG+D5Mm4ogEbQEVBp+H8Tw0yCbAtEM3vV7ZHrH26nS1KogICVYPUvbs9YmtNsQBmhs4P3vPZHVvcTSgYJAKY1oSS11E2dUItF0ClDJJoRAlYum6WGGC2obrskGTDDxIFoAwnFM0wzYfTghcGmB2i3k5CQlEAqeF7s3/teGTC/a3MCABuJGBHChguS55ZGoDfWxx1muPhqDVrAJ2HUh+BqNAv6/eVpdCyDIzaJ/UAfwET8SxPH07bpwAAAABJRU5ErkJggg==';
+var infowindow = new google.maps.InfoWindow({});
 class Map extends React.Component {
     constructor() {
         super();
@@ -17,7 +18,7 @@ class Map extends React.Component {
     componentDidMount() {
         this.map = createMap(this.refs.map, defaultLoc);
         this.placesService = new google.maps.places.PlacesService(this.map);
-        this.currentMarker = addMarker(this.map, defaultLoc, true, '');
+        this.currentMarker = addMarker(this.map, defaultLoc, true, '', positionIcon);
         markers.pop(this.currentMarker);
         
 
@@ -98,6 +99,15 @@ class Map extends React.Component {
         var distance = this.searchOptions.range;
 
         this.updateStatus('Searching for a place nearby.', true)
+        this.placesService.getDetails({
+          placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
+        }, function(place, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+              infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+                'Place ID: ' + place.place_id + '<br>' +
+                place.formatted_address + '</div>');
+          }
+        });
         this.placesService.radarSearch({
             type: category,
             radius: distance,
@@ -183,6 +193,7 @@ const drinksTypes = 'night_club';
 const shopsTypes = 'book_store clothing_store convenience_store department_store furniture_store jewelry_store shoe_store shopping_mall';
 const funTypes = 'amusement_park aquarium art_gallery bowling_alley campground casino movie_theater spa stadium zoo';
 
+
 function createMap(element, location) {
     var map = new google.maps.Map(element, {
         center: location,
@@ -238,6 +249,9 @@ function addMarker(map, position, draggable, title, icon) {
         title: title,
         icon: icon,
     })
+    if(marker.icon !== positionIcon){
+        infowindow.open(map, marker);
+    }
     markers.push(marker);
     return(marker);
 }
