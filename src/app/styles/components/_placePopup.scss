@@ -1,0 +1,8 @@
+.place-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: grey;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
