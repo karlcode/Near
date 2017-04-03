@@ -4,15 +4,29 @@ class PlacePopup extends React.Component {
     constructor() {
         super();
         this.state = {
-            created: false
+            visible: true
         };        
+
+        this.close = this.close.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
+        console.log(this.props);
+        if (this.props !== nextProps)
+            this.state.visible = nextProps.visible;
+    }
+
+    close() {
+        this.setState({visible : null});
     }
 
 
     render() {
 
-        if (this.props.place === null)
+        if (this.props.place === null || !this.state.visible)
             return(<div />)
+        
             
         var place = this.props.place;
         var photo, name, rating, address, review, number, price, hours = '';
@@ -51,21 +65,18 @@ class PlacePopup extends React.Component {
         }
 
         return (
-            <div className="place-popup">
-                <div className="flexwrap">
-                    <div className="firstFlex">
+            <div>
+                <div id="place-popup-overlay" onClick={this.close} />
+                <div className="place-popup">
                     <h1><a href = {website}>{name}</a></h1>
                     <p>{price}</p> <p>{rating}</p> 
-                    </div>
-                    <div className="secondFlex">
                     <p>{address}</p>
                     <p>Phone: {number}</p>
                     <p><i>{hours}</i> </p>
-                     </div>
-                <img src = {photo} />
+                    <img src={photo} />
                 </div>
             </div>
-        
+            
         );
     }
 }

@@ -124,9 +124,6 @@ class Map extends React.Component {
         }, (results, status) => {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 var randomPlace = results[Math.floor(Math.random() * results.length)];
-                clearMarkers();
-                addMarker(this.map, randomPlace.geometry.location, false, '');
-                this.fitMarkers();
                 this.loadPopup(randomPlace, searchButton);
             } else {
                 this.updateStatus('Unable to find place that matches criteria.', false)
@@ -140,7 +137,15 @@ class Map extends React.Component {
         this.placesService.getDetails({placeId: place.place_id}, (placeDetails, status) => {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 this.updateStatus('Place found!', false)
-                console.log(placeDetails);
+
+                clearMarkers();
+                var marker = addMarker(this.map, place.geometry.location, false, '');
+                this.fitMarkers();  
+                marker.addListener('click', () => {
+                    this.forceUpdate();
+                });
+
+
                 this.state.popupPlace = placeDetails;
                 this.forceUpdate();
             } else {
@@ -207,7 +212,7 @@ class Map extends React.Component {
                      
                      <StatusBar status={this.state.status} loading={this.state.loading}/>
                 </div>
-               <PlacePopup place={this.state.popupPlace}/>
+               <PlacePopup place={this.state.popupPlace} visible={true}/>
             </div>
             
         );
@@ -225,8 +230,7 @@ const funTypes = 'amusement_park aquarium art_gallery bowling_alley campground c
 
 const locMarkerInfo = '' +
     '<div id ="location-marker">' +
-
-        '<p>Drag me</p>' +
+        '<p><strong>Drag me</strong></p>' +
     '</div>'
 
 
