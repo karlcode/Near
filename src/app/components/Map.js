@@ -203,9 +203,11 @@ class Map extends React.Component {
             <div>
                 <div id="map-wrapper">
                     <div id="map" ref="map" />
-                    <StatusBar status={this.state.status} loading={this.state.loading}/>
+                    
+                     
+                     <StatusBar status={this.state.status} loading={this.state.loading}/>
                 </div>
-                <PlacePopup place={this.state.popupPlace}/>
+               <PlacePopup place={this.state.popupPlace}/>
             </div>
             
         );
@@ -223,8 +225,8 @@ const funTypes = 'amusement_park aquarium art_gallery bowling_alley campground c
 
 const locMarkerInfo = '' +
     '<div id ="location-marker">' +
-        '<h4>Current Location</h4>' +
-        '<p>Drag me, or change in the widget.</p>' +
+
+        '<p>Drag me</p>' +
     '</div>'
 
 
