@@ -13,6 +13,7 @@
 
 
     h1 {
+        color: $primary;
         font-size: 18px;
         font-weight: normal;
         text-align: center;
@@ -104,11 +105,11 @@
             color: white;
             padding: 3px 5px;
             display: inline-block;
-            background-color: $active;
+            background-color: $primary;
             transition: 0.3s;
 
             &:hover {
-                background-color: $active-light;
+                background-color: $primary-light;
                 cursor: pointer;
             }
             &:active {

@@ -5,13 +5,48 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    max-width: 800px;
+    width: 350px;
     z-index: 2;
-    padding: 20px;
-     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
-     a{
-         color: $active;
-     }
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+
+
+    .place-popup-title {
+        background-color: $primary-light;
+        padding: 6px;
+        font-size: 20px;
+        text-align: center;
+        margin: 0px;
+        font-weight: normal;
+        a {
+            color: white;
+            text-decoration: none;
+            &:hover {
+                color: #eee;
+            }
+        }
+    }
+
+    .info {
+        padding: 0px 20px;
+    }
+
+    .place-popup-links {
+        text-align: center;
+        font-size: 24px;
+
+        i {
+            padding: 0px 6px;
+            &:hover {
+                color: black;
+                cursor: pointer;
+            }
+        }
+    }
+
+    img {
+        display: block;
+        margin: auto;
+    }
 }
 
 #place-popup-overlay {
@@ -23,17 +58,4 @@
     background-color: black;
     opacity: 0.8;
     z-index: 1;
-}
-
-.flexwrap{
-    display: flex;
-   
-}
-.firstFlex{
-    text-align: center;
-    vertical-align: middle;
-}
-.secondFlex{
-    padding: 10px;
-    bottom: 0;
 }

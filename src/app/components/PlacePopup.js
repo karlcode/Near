@@ -11,8 +11,6 @@ class PlacePopup extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
-        console.log(this.props);
         if (this.props !== nextProps)
             this.state.visible = nextProps.visible;
     }
@@ -39,9 +37,11 @@ class PlacePopup extends React.Component {
         if (place.name) {
             name = place.name;
         }
+        /*
         if (place.rating) {
-            rating = place.rating + "/5";
-        }
+            rating = place.rating + " / 5";
+        }*/
+
         if (place.formatted_address) {
             address = place.formatted_address;
         }
@@ -52,13 +52,16 @@ class PlacePopup extends React.Component {
         if (place.price_level) {
             price = place.price_level;
         }
+
+        /*
         if (place.price_level) {
             price = place.price_level;
             if (price == 1){price = "$"}
             if (price == 2){price = "$$"}
             if (price == 3){price = "$$$"}
             if (price == 4){price = "$$$$"}
-        }
+        }*/
+
          if (place.opening_hours) {
             if (place.opening_hours.open_now) {hours = "Open now"}
             else{ hours = "Closed now"}
@@ -67,14 +70,16 @@ class PlacePopup extends React.Component {
         return (
             <div>
                 <div id="place-popup-overlay" onClick={this.close} />
-                <div className="place-popup">
-                    <h1><a href = {website}>{name}</a></h1>
-                    <p>{price}</p> <p>{rating}</p> 
-                    <p>{address}</p>
-                    <p>Phone: {number}</p>
-                    <p><i>{hours}</i> </p>
-                    <img src={photo} />
-                </div>
+                    <div className="place-popup">
+                        <h1 className="place-popup-title"><a href={website} target="_blank">{name}</a></h1>
+                        <div className="info">
+                            <p><i>{hours}</i> </p>
+                            <p><strong>Phone:</strong> {number}</p>
+                            <p>{address}</p>
+                            <p className="place-popup-links"><a onClick={this.props.search}><i className="fa fa-random" aria-hidden="true"></i></a><a href={place.url} target="_blank"><i className="fa fa-map" aria-hidden="true"></i></a></p>
+                        </div>
+                        <img src={photo} />
+                    </div>
             </div>
             
         );

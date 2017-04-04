@@ -14,7 +14,9 @@ class Map extends React.Component {
         this.state = {
             status: 'Loading Map',
             loading: true,
-            popupPlace: null
+            popupPlace: null,
+            popupVisible: false,
+            searchButton: ''
         };
     }
 
@@ -32,11 +34,16 @@ class Map extends React.Component {
             content: locMarkerInfo
         });
 
-        this.currentMarker = addMarker(this.map, defaultLoc, true, '');
+        this.currentMarker = addMarker(this.map, defaultLoc, true, '', 'https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-pin-container-bg_4x.png,icons/onion/SHARED-mymaps-pin-container_4x.png,icons/onion/1899-blank-shape_pin_4x.png&highlight=ff000000,1a237e,ff000000&scale=2.0');
         markers.pop(this.currentMarker);
         this.currentMarker.addListener('click', () => {
             infowindow.open(this.map, this.currentMarker);
         });
+
+        this.currentMarker.addListener('drag', () => {
+            this.updateStatus('Current location: (' + round(this.currentMarker.position.lat(), 4) + ', ' + round(this.currentMarker.position.lng(), 4) + ')', false);
+        });
+
         infowindow.open(this.map, this.currentMarker);
 
         this.updateStatus('Requesting Location', true)
@@ -60,7 +67,8 @@ class Map extends React.Component {
         if (event) {
             switch(event.title) {
                 case 'search':
-                    this.search(event.data);
+                    this.state.searchButton = event.data;
+                    this.search();
                     break;
                 case 'bootstrap' :
                     this.searchOptions = event.data.searchOptions;
@@ -108,7 +116,10 @@ class Map extends React.Component {
         this.updateStatus(status, false)
     }
 
-    search(searchButton) {
+    search() {
+        var searchButton = this.state.searchButton;
+        searchButton.className = 'widget-search-busy';
+
         var category = this.getRandomCategory();
         var distance = this.searchOptions.range;
 
@@ -142,12 +153,21 @@ class Map extends React.Component {
                 var marker = addMarker(this.map, place.geometry.location, false, '');
                 this.fitMarkers();  
                 marker.addListener('click', () => {
+                    this.state.popupVisible = true;
                     this.forceUpdate();
+                    this.state.popupVisible = false;
                 });
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: '<p><strong>' + placeDetails.name + '</strong></p>'
+                });
+                infowindow.open(this.map, marker);
 
 
                 this.state.popupPlace = placeDetails;
+                this.state.popupVisible = true;
                 this.forceUpdate();
+                this.state.popupVisible = false;
             } else {
                 this.updateStatus('Unable to lookup place details. :(', false)
             }
@@ -212,7 +232,7 @@ class Map extends React.Component {
                      
                      <StatusBar status={this.state.status} loading={this.state.loading}/>
                 </div>
-               <PlacePopup place={this.state.popupPlace} visible={true}/>
+               <PlacePopup place={this.state.popupPlace} visible={this.state.popupVisible} search={this.search.bind(this)}/>
             </div>
             
         );
@@ -274,7 +294,7 @@ function getLocation(map, callback) {
             lng: position.coords.longitude
         };
         callback(location);
-    }, function() {callback(location)}, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
+    }, function(status) {callback(location)}, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
     } else {
         callback(location)
     }
