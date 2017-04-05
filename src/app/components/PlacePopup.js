@@ -13,6 +13,7 @@ class PlacePopup extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
         if (this.props !== nextProps)
             this.state.visible = nextProps.visible;
 
