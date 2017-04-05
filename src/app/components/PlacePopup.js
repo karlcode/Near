@@ -4,45 +4,51 @@ class PlacePopup extends React.Component {
     constructor() {
         super();
         this.state = {
-            visible: true
+            visible: true,
+            distance: '~'
         };        
 
         this.close = this.close.bind(this);
+        this.distanceService = new google.maps.DistanceMatrixService();
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps)
             this.state.visible = nextProps.visible;
+
+         console.log(this.props);
+        if (nextProps.place)
+            this.routeSearch(nextProps);  
     }
 
     close() {
         this.setState({visible : null});
     }
-    routeSearch() {
-        var service = new google.maps.DistanceMatrixService();
-        var currentMarker = this.props.current; 
-        var origin = new google.maps.LatLng(currentMarker.position.lat(), currentMarker.position.lng());
-        var place = this.props.place;
-        service.getDistanceMatrix(
-        {
-            origins: [origin],
-            destinations: [place.formatted_address],
-            travelMode: 'WALKING'
-        }, callback);
-        function callback(response, status) {
-            console.log(response.rows[0].elements[0].distance)
+
+    routeSearch(props) {
+        if (this.placeID != props.place.place_id) {
+            this.placeID = props.place.place_id;
+            this.setState({distance: '~'});
+
+            this.distanceService.getDistanceMatrix({
+                origins: [props.current.position],
+                destinations: [props.place.formatted_address],
+                travelMode: 'WALKING'
+            }, (response, status) => {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    this.setState({distance: (response.rows[0].elements[0].distance.text)});
+                }
+            });
         }
     }
 
     render() {
-
         if (this.props.place === null || !this.state.visible)
             return(<div />)
-         
+
         var place = this.props.place;
         var photo, name, rating, address, review, number, price, hours = '';
         var website = place.website;
-    
 
         if (place.photos) {
             photo = place.photos[0].getUrl({'maxWidth': 350, 'maxHeight': 350});
@@ -87,7 +93,7 @@ class PlacePopup extends React.Component {
                         <h1 className="place-popup-title"><a href={website} target="_blank">{name}</a></h1>
                         <div className="info">
                             <p><i>{hours}</i> </p>
-                            <p>{this.routeSearch()} </p> 
+                            <p><strong>Distance:</strong> {this.state.distance}</p> 
                             <p><strong>Phone:</strong> {number}</p>
                             <p>{address}</p>
                             <p className="place-popup-links"><a onClick={this.props.search}><i className="fa fa-random" aria-hidden="true"></i></a><a href={place.url} target="_blank"><i className="fa fa-map" aria-hidden="true"></i></a></p>
