@@ -18,14 +18,27 @@ class PlacePopup extends React.Component {
     close() {
         this.setState({visible : null});
     }
-
+    routeSearch() {
+        var service = new google.maps.DistanceMatrixService();
+        var currentMarker = this.props.current; 
+        var origin = new google.maps.LatLng(currentMarker.position.lat(), currentMarker.position.lng());
+        var place = this.props.place;
+        service.getDistanceMatrix(
+        {
+            origins: [origin],
+            destinations: [place.formatted_address],
+            travelMode: 'WALKING'
+        }, callback);
+        function callback(response, status) {
+            console.log(response.rows[0].elements[0].distance)
+        }
+    }
 
     render() {
 
         if (this.props.place === null || !this.state.visible)
             return(<div />)
-        
-            
+         
         var place = this.props.place;
         var photo, name, rating, address, review, number, price, hours = '';
         var website = place.website;
@@ -74,6 +87,7 @@ class PlacePopup extends React.Component {
                         <h1 className="place-popup-title"><a href={website} target="_blank">{name}</a></h1>
                         <div className="info">
                             <p><i>{hours}</i> </p>
+                            <p>{this.routeSearch()} </p> 
                             <p><strong>Phone:</strong> {number}</p>
                             <p>{address}</p>
                             <p className="place-popup-links"><a onClick={this.props.search}><i className="fa fa-random" aria-hidden="true"></i></a><a href={place.url} target="_blank"><i className="fa fa-map" aria-hidden="true"></i></a></p>

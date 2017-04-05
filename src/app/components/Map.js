@@ -232,7 +232,7 @@ class Map extends React.Component {
                      
                      <StatusBar status={this.state.status} loading={this.state.loading}/>
                 </div>
-               <PlacePopup place={this.state.popupPlace} visible={this.state.popupVisible} search={this.search.bind(this)}/>
+               <PlacePopup current={this.currentMarker} place={this.state.popupPlace} visible={this.state.popupVisible} search={this.search.bind(this)}/>
             </div>
             
         );
